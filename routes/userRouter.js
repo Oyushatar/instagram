@@ -17,10 +17,15 @@ useRouter.post("/signup", async (req, res) => {
   }
 });
 
+useRouter.get("/posts", async () => {
+  const posts = await postModel.find();
+  return posts;
+});
+
 useRouter.get("/user/post", async (req, res) => {
   try {
     const post = await userModel.find().populate("post", "caption postImage");
-    res.status(200).json(posts);
+    res.status(200).json(post);
   } catch (error) {}
 });
 

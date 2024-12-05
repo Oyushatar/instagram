@@ -17,16 +17,18 @@ useRouter.post("/signup", async (req, res) => {
   }
 });
 
-useRouter.get("/posts", async () => {
+useRouter.get("/posts", async (req, res) => {
   const posts = await postModel.find();
-  return posts;
+  return res.json(posts);
 });
 
-useRouter.get("/user/post", async (req, res) => {
+useRouter.get("/user", async (req, res) => {
   try {
-    const post = await userModel.find().populate("post", "caption postImage");
+    const post = await userModel.find().populate("posts");
     res.status(200).json(post);
-  } catch (error) {}
+  } catch (error) {
+    res.send(error);
+  }
 });
 
 useRouter.post("/follow", async (req, res) => {

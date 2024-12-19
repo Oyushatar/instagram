@@ -1,21 +1,23 @@
 const Route = require("express");
 const useRouter = Route();
 const userModel = require("../models/userSchema");
-const commentModel = require("../models/commentSchema");
+const jwt = require("jsonwebtoken");
 const postModel = require("../models/postSchema");
+const bcrypt = require("bcrypt");
+const authMiddleWare = require("../models/auth-middleWare");
 
-useRouter.post("/signup", async (req, res) => {
-  try {
-    const body = req.body;
-    const { password } = body;
-    const response = await userModel.create(body);
-    console.log("done");
-    res.send(response);
-  } catch (error) {
-    console.log(error);
-    res.send(error);
-  }
-});
+// useRouter.post("/signup", async (req, res) => {
+//   try {
+//     const body = req.body;
+//     const { password } = body;
+//     const response = await userModel.create(body);
+//     console.log("done");
+//     res.send(response);
+//   } catch (error) {
+//     console.log(error);
+//     res.send(error);
+//   }
+// });
 
 useRouter.get("/posts", async (req, res) => {
   const posts = await postModel.find().populate("userId");
@@ -50,25 +52,63 @@ useRouter.post("/follow", async (req, res) => {
   }
 });
 
-useRouter.post("/comments", async (req, res) => {
-  const { userId, postId, comment } = req.body;
+// useRouter.post("/comments", async (req, res) => {
+//   const { userId, postId, comment } = req.body;
 
-  const newComment = await commentModel.create({
-    postId: postId,
-    comment: comment,
-    userId: userId,
-  });
+//   const newComment = await commentModel.create({
+//     postId: postId,
+//     comment: comment,
+//     userId: userId,
+//   });
 
-  const updated = await postModel.findByIdAndUpdate(
-    postId,
-    {
-      $push: {
-        comments: newComment._id,
+//   const updated = await postModel.findByIdAndUpdate(
+//     postId,
+//     {
+//       $push: {
+//         comments: newComment._id,
+//       },
+//     },
+//     { new: true }
+//   );
+
+//   res.send(newComment._id);
+// });
+
+useRouter.post("/signup", authMiddleWare, async (req, res) => {
+  const { email, username, password } = req.body;
+  const saltRound = 10;
+  try {
+    const hashedPassword = await bcrypt.hash(password, saltRound);
+    const createdUser = await userModel.create({
+      email: email,
+      username: username,
+      password: hashedPassword,
+    });
+
+    const token = jwt.sign(
+      {
+        userId: createdUser._id,
+        username: createdUser.username,
       },
-    },
-    { new: true }
-  );
+      process.env.JWT_SECRET,
+      { expiresIn: "72h" }
+    );
 
-  res.send(newComment._id);
+    console.log({
+      userId: createdUser._id,
+      username: createdUser.username,
+    });
+    res.send({
+      token,
+    });
+  } catch (error) {
+    res.send({ message: `something went wrong ${error}` });
+  }
+});
+
+useRouter.post("logIn", async (req, res) => {
+  const { email, password, username } = req.body;
+  const saltRound = 10;
+  const hashedPassword = await bcrypt.hash(password, saltRound);
 });
 module.exports = useRouter;

@@ -37,6 +37,7 @@ commentRouter.get("/comment", async (req, res) => {
         comment: response._id,
       },
     });
+    req.send(response);
   } catch (error) {
     res.send(error);
   }

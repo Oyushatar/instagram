@@ -8,8 +8,8 @@ commentRouter.post("/comments", async (req, res) => {
     postId: postId,
     comment: comment,
     userId: userId,
-    profileImage,
-    userName,
+    profile: profile,
+    userName: userName,
   });
 
   const updated = await postModel.findByIdAndUpdate(

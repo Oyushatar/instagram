@@ -1,15 +1,16 @@
 const Router = require("express");
-const commentRouter = Route();
+const commentRouter = Router();
+const commentModel = require("../models/commentSchema");
+const postModel = require("../models/postSchema");
+const userModel = require("../models/userSchema");
 
 commentRouter.post("/comments", async (req, res) => {
-  const { profileImage, userId, postId, comment, userName } = req.body;
+  const { userId, postId, comment } = req.body;
 
   const newComment = await commentModel.create({
     postId: postId,
     comment: comment,
     userId: userId,
-    profile: profile,
-    userName: userName,
   });
 
   const updated = await postModel.findByIdAndUpdate(
@@ -27,8 +28,15 @@ commentRouter.post("/comments", async (req, res) => {
 
 commentRouter.get("/comment", async (req, res) => {
   try {
-    const comment = await userModel.find().populate("comments");
-    res.status(200).json(comment);
+    const comment = await userModel
+      .find()
+      .populate("comment", "userId", "postId");
+    const response = commentModel.create({ userId, postId, comment });
+    await postModel.findByIdAndUpdate(postId, {
+      $push: {
+        comment: response._id,
+      },
+    });
   } catch (error) {
     res.send(error);
   }

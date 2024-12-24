@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const app = express();
 const cors = require("cors");
+const commentRouter = require("./routes/commentRouter");
 app.use(cors());
 app.use(express.json());
 
@@ -22,5 +23,6 @@ database();
 
 app.use(useRouter);
 app.use(postRouter);
+app.use(commentRouter);
 
 app.listen(8080, console.log("running on port 8080"));

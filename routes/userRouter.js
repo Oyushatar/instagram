@@ -6,18 +6,18 @@ const postModel = require("../models/postSchema");
 const bcrypt = require("bcrypt");
 const authMiddleWare = require("../models/auth-middleWare");
 
-// useRouter.post("/signup", async (req, res) => {
-//   try {
-//     const body = req.body;
-//     const { password } = body;
-//     const response = await userModel.create(body);
-//     console.log("done");
-//     res.send(response);
-//   } catch (error) {
-//     console.log(error);
-//     res.send(error);
-//   }
-// });
+useRouter.post("/signup", async (req, res) => {
+  try {
+    const body = req.body;
+    const { password } = body;
+    const response = await userModel.create(body);
+    console.log("done");
+    res.send(response);
+  } catch (error) {
+    console.log(error);
+    res.send(error);
+  }
+});
 
 useRouter.get("/posts", async (req, res) => {
   const posts = await postModel.find().populate("userId");

@@ -6,16 +6,36 @@ const postModel = require("../models/postSchema");
 const bcrypt = require("bcrypt");
 const authMiddleWare = require("../models/auth-middleWare");
 
-useRouter.post("/signup", async (req, res) => {
+useRouter.post("/signup", authMiddleWare, async (req, res) => {
+  const { email, username, password } = req.body;
+  const saltRound = 10;
   try {
-    const body = req.body;
-    const { password } = body;
-    const response = await userModel.create(body);
-    console.log("done");
-    res.send(response);
+    const hashedPassword = await bcrypt.hash(password, saltRound);
+    const createdUser = await userModel.create({
+      email: email,
+      username: username,
+      password: hashedPassword,
+    });
+
+    const token = jwt.sign(
+      {
+        userId: createdUser._id,
+        username: createdUser.username,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "72h" }
+    );
+
+    console.log({
+      userId: createdUser._id,
+      username: createdUser.username,
+    });
+    res.json({
+      user: createdUser,
+      token,
+    });
   } catch (error) {
-    console.log(error);
-    res.send(error);
+    res.send({ message: `something went wrong ${error}` });
   }
 });
 
@@ -73,38 +93,6 @@ useRouter.post("/follow", async (req, res) => {
 
 //   res.send(newComment._id);
 // });
-
-useRouter.post("/signup", authMiddleWare, async (req, res) => {
-  const { email, username, password } = req.body;
-  const saltRound = 10;
-  try {
-    const hashedPassword = await bcrypt.hash(password, saltRound);
-    const createdUser = await userModel.create({
-      email: email,
-      username: username,
-      password: hashedPassword,
-    });
-
-    const token = jwt.sign(
-      {
-        userId: createdUser._id,
-        username: createdUser.username,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "72h" }
-    );
-
-    console.log({
-      userId: createdUser._id,
-      username: createdUser.username,
-    });
-    res.send({
-      token,
-    });
-  } catch (error) {
-    res.send({ message: `something went wrong ${error}` });
-  }
-});
 
 useRouter.post("logIn", async (req, res) => {
   const { email, password, username } = req.body;

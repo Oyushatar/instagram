@@ -5,11 +5,13 @@ const userModel = require("../models/userSchema");
 
 postRouter.post("/post", async (req, res) => {
   try {
-    const { description, postImage, userId } = req.body;
+    const { description, postImage, userId, profileImage, likes } = req.body;
     const createPost = await postModel.create({
       description,
       postImage,
       userId,
+      profileImage,
+      likes,
     });
     res.send(createPost);
     await userModel.findByIdAndUpdate(userId, {

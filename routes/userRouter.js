@@ -6,14 +6,14 @@ const postModel = require("../models/postSchema");
 const bcrypt = require("bcrypt");
 const authMiddleWare = require("../models/auth-middleWare");
 
-useRouter.post("/signup", authMiddleWare, async (req, res) => {
+useRouter.post("/signup", async (req, res) => {
   const { email, username, password } = req.body;
   const saltRound = 10;
   try {
     const hashedPassword = await bcrypt.hash(password, saltRound);
     const createdUser = await userModel.create({
-      email: email,
-      username: username,
+      email,
+      username,
       password: hashedPassword,
     });
 

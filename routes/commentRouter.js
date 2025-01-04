@@ -31,6 +31,7 @@ commentRouter.get("/comment/:postId", async (req, res) => {
 
   try {
     const comment = await commentModel.find({ postId }).populate("userId");
+
     res.send(comment);
   } catch (error) {
     res.send(error);

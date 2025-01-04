@@ -27,17 +27,18 @@ commentRouter.post("/comments", async (req, res) => {
 });
 
 commentRouter.get("/comment", async (req, res) => {
+  const { postId } = req.params;
   try {
     const comment = await userModel
-      .find()
+      .findById(postId)
       .populate("comment", "userId", "postId");
-    const response = commentModel.create({ userId, postId, comment });
-    await postModel.findByIdAndUpdate(postId, {
-      $push: {
-        comment: response._id,
-      },
-    });
-    req.send(response);
+    // const response = commentModel.create({ userId, postId, comment });
+    // await postModel.findByIdAndUpdate(postId, {
+    //   $push: {
+    //     comment: response._id,
+    //   },
+    // });
+    req.send(comment);
   } catch (error) {
     res.send(error);
   }

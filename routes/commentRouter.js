@@ -26,19 +26,12 @@ commentRouter.post("/comments", async (req, res) => {
   res.send(newComment._id);
 });
 
-commentRouter.get("/comment", async (req, res) => {
+commentRouter.get("/comment/:postId", async (req, res) => {
   const { postId } = req.params;
+
   try {
-    const comment = await userModel
-      .findById(postId)
-      .populate("comment", "userId", "postId");
-    // const response = commentModel.create({ userId, postId, comment });
-    // await postModel.findByIdAndUpdate(postId, {
-    //   $push: {
-    //     comment: response._id,
-    //   },
-    // });
-    req.send(comment);
+    const comment = await commentModel.find({ postId }).populate("userId");
+    res.send(comment);
   } catch (error) {
     res.send(error);
   }

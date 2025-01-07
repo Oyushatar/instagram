@@ -3,7 +3,6 @@ const commentRouter = Router();
 const commentModel = require("../models/commentSchema");
 const postModel = require("../models/postSchema");
 const userModel = require("../models/userSchema");
-const { profile } = require("console");
 
 commentRouter.post("/comments", async (req, res) => {
   const { userId, postId, comment, profile } = req.body;

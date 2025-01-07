@@ -3,14 +3,16 @@ const commentRouter = Router();
 const commentModel = require("../models/commentSchema");
 const postModel = require("../models/postSchema");
 const userModel = require("../models/userSchema");
+const { profile } = require("console");
 
 commentRouter.post("/comments", async (req, res) => {
-  const { userId, postId, comment } = req.body;
+  const { userId, postId, comment, profile } = req.body;
 
   const newComment = await commentModel.create({
     postId: postId,
     comment: comment,
     userId: userId,
+    profile: profile,
   });
 
   const updated = await postModel.findByIdAndUpdate(

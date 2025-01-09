@@ -39,11 +39,6 @@ useRouter.post("/signup", async (req, res) => {
   }
 });
 
-useRouter.get("/posts", async (req, res) => {
-  const posts = await postModel.find().populate("userId");
-  return res.json(posts);
-});
-
 useRouter.get("/user", async (req, res) => {
   try {
     const post = await userModel.find().populate("posts");

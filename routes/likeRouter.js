@@ -16,7 +16,7 @@ likeRouter.post("/post/like", async (req, res) => {
   }
 });
 
-likeRouter.get("/:postId", async (req, res) => {
+likeRouter.get("/getLikes/:postId", async (req, res) => {
   try {
     const { postId } = req.params;
     const likedUsers = await postModel

@@ -25,4 +25,9 @@ postRouter.post("/post", async (req, res) => {
   }
 });
 
+postRouter.get("/posts", async (req, res) => {
+  const posts = await postModel.find();
+  return res.json(posts);
+});
+
 module.exports = postRouter;

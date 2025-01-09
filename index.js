@@ -1,6 +1,7 @@
 const express = require("express");
 const useRouter = require("./routes/userRouter");
 const postRouter = require("./routes/postRouter");
+const likeRouter = require("./routes/likeRouter");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -13,7 +14,6 @@ app.use(express.json());
 const database = async () => {
   try {
     const base = await mongoose.connect(process.env.MONGODB_URI);
-
     console.log("DB success");
   } catch (error) {
     console.log(error);
@@ -21,6 +21,7 @@ const database = async () => {
 };
 database();
 
+app.use(likeRouter);
 app.use(useRouter);
 app.use(postRouter);
 app.use(commentRouter);

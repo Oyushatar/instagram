@@ -3,6 +3,7 @@ const postModel = require("../models/postSchema");
 const likeRouter = Route();
 
 likeRouter.post("/post/like", async (req, res) => {
+  s;
   try {
     const { userId, postId } = req.body;
     likedPostResponse = await postModel.findByIdAndUpdate(postId, {

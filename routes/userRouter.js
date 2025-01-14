@@ -67,28 +67,6 @@ useRouter.post("/follow", async (req, res) => {
   }
 });
 
-// useRouter.post("/comments", async (req, res) => {
-//   const { userId, postId, comment } = req.body;
-
-//   const newComment = await commentModel.create({
-//     postId: postId,
-//     comment: comment,
-//     userId: userId,
-//   });
-
-//   const updated = await postModel.findByIdAndUpdate(
-//     postId,
-//     {
-//       $push: {
-//         comments: newComment._id,
-//       },
-//     },
-//     { new: true }
-//   );
-
-//   res.send(newComment._id);
-// });
-
 useRouter.post("logIn", async (req, res) => {
   const { email, password, username } = req.body;
   const saltRound = 10;

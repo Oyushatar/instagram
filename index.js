@@ -21,6 +21,17 @@ const database = async () => {
 };
 database();
 
+app.get("/getOneUser", async (req, res) => {
+  try {
+    const userId = req.body.userId;
+    const user = await userModel.findById(userId);
+    const populatedUser = await user.populate("post follow following");
+    res.send(populatedUser);
+  } catch (error) {
+    res.send(error);
+  }
+});
+
 app.use(likeRouter);
 app.use(useRouter);
 app.use(postRouter);

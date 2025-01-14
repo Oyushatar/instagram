@@ -23,7 +23,7 @@ useRouter.post("/signup", async (req, res) => {
         username: createdUser.username,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "72h" }
+      { expiresIn: "9999h" }
     );
 
     console.log({

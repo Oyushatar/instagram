@@ -10,7 +10,6 @@ postRouter.post("/post", async (req, res) => {
       description,
       postImage,
       userId,
-      profileImage,
       likes,
     });
     res.send(createPost);
@@ -26,7 +25,9 @@ postRouter.post("/post", async (req, res) => {
 });
 
 postRouter.get("/posts", async (req, res) => {
-  const posts = await postModel.find();
+  const posts = await postModel
+    .find()
+    .populate("userId", "profileImage username");
   return res.json(posts);
 });
 

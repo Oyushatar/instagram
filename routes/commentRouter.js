@@ -29,7 +29,6 @@ commentRouter.post("/comments", async (req, res) => {
 
 commentRouter.get("/comment/:postId", async (req, res) => {
   const { postId } = req.params;
-  s;
   try {
     const comment = await commentModel.find({ postId }).populate("userId");
     res.send(comment);

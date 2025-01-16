@@ -2,6 +2,7 @@ const express = require("express");
 const useRouter = require("./routes/userRouter");
 const postRouter = require("./routes/postRouter");
 const likeRouter = require("./routes/likeRouter");
+const userModel = require("./models/userSchema");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -24,10 +25,12 @@ database();
 app.get("/getOneUser", async (req, res) => {
   try {
     const userId = req.body.userId;
-    const user = await userModel.findById(userId);
-    const populatedUser = await user.populate("post follow following");
+    const populatedUser = await userModel
+      .findById(userId)
+      .populate("post follow following");
     res.send(populatedUser);
   } catch (error) {
+    console.log(error);
     res.send(error);
   }
 });

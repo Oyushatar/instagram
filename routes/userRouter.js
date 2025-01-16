@@ -47,6 +47,18 @@ useRouter.get("/user", async (req, res) => {
     res.send(error);
   }
 });
+useRouter.get("/getOneUser", async (req, res) => {
+  try {
+    const userId = req.body.userId;
+    const populatedUser = await userModel
+      .findById(userId)
+      .populate("post follow following");
+    res.send(populatedUser);
+  } catch (error) {
+    console.log(error);
+    res.send(error);
+  }
+});
 
 useRouter.post("/follow", async (req, res) => {
   try {
